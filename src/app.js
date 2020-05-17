@@ -5,7 +5,7 @@ require('./config/database');
 
 const express = require("express");
 const morgan = require('morgan')
-const cors = require('cors')({origin: 'https://edirect-todo-client.herokuapp.com/'});
+const cors = require('cors');
 
 class AppController {
   constructor() {
@@ -15,7 +15,7 @@ class AppController {
   }
 
   middlewares() {
-    this.express.use(cors);
+    this.express.use(cors());
     this.express.use(express.json());
     this.express.use(morgan('dev'));
 
