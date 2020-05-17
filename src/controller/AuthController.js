@@ -12,15 +12,21 @@ function generateToken( params = {}){
 }
 
 routes.post('/register', async (req, res) => {
-    const {email} = req.body;
+    const {name, email, password} = req.body;
     try {
+
+        if (!name) return res.status(400).send({ error: 'Name is required.', field: 'name'});
+        if (!email) return res.status(400).send({ error: 'Email address is required.', field: 'email'});
+        if (!password) return res.status(400).send({ error: 'Password is required.', field: 'password'});
+
         if (await User.findOne({email}))
-            return res.status(400).send({ error: 'User already exists.'})
+            return res.status(400).send({ error: 'The email address is already in use.'})
+
         const user = await User.create(req.body);
 
         user.password = undefined;
 
-        return res.send({
+        return res.status(200).send({
             user, 
             token: generateToken({id: user.id})
         })
@@ -36,10 +42,10 @@ routes.post('/authenticate', async (req, res) => {
     const user = await User.findOne({email}).select('+password'); 
 
     if (!user)
-        return res.status(400).send({error: 'User not found'});
+        return res.status(400).send({error: 'User or Password incorrect.'});
 
     if (!await bcrypt.compare(password, user.password))
-        return res.status(400).send({error: 'Invalid password'});
+        return res.status(400).send({error: 'User or Password incorrect.'});
 
     user.password = undefined;
 
