@@ -5,7 +5,7 @@ require('./config/database');
 
 const express = require("express");
 const morgan = require('morgan')
-const cors = require('cors')({origin: true});
+const cors = require('cors')({origin: 'https://edirect-todo-client.herokuapp.com/'});
 
 class AppController {
   constructor() {
